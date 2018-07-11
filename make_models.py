@@ -1,15 +1,17 @@
 import itertools
 import argparse
 import json
+import subprocess
+
 settings = {
     "epsilon_frames": [2000000],
      "epsilon_start": [2.0],
      "epsilon_final": [0.1],
-     "learning_rate": [0.00006, 0.00001],
+     "learning_rate": [0.00003, 0.00001],
              "gamma": [0.99],
-         "dqn_model": ["FSADQNAppendToFC", "FSADQN"],
+         "dqn_model": ["FSADQNScaling"],
                "fsa": [True],
-           "machine": ["ngcv4"],
+           "machine": ["ngcv1"],
     "replay_initial": [500],
     "video_interval": [1000],
         "frame_stop": [3000]
@@ -19,6 +21,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--reps", default=1, type=int, help="Number of repeat jobs")
     parser.add_argument("--file", default='', help="Output file")
+    parser.add_argument("--run", default=False, action="store_true", help="Run jobs")
 
     args = parser.parse_args()
     if len(args.file) == 0:
@@ -40,3 +43,7 @@ if __name__ == "__main__":
     # Writes jobs to json file
     with open(args.file, "w") as f:
         f.write(json.dumps(output))
+
+    if args.run:
+        # Runs jobs
+        subprocess.call("python run_all.py --file " + args.file, shell=True)
