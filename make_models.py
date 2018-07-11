@@ -24,11 +24,19 @@ if __name__ == "__main__":
     if len(args.file) == 0:
         args.file = "jobs.json"
 
-    # Makes all the permutations of the above settings and writes them to json file
+    # Makes all the permutations of the above settings
     keys, values = zip(*settings.items())
     jobs = [dict(zip(keys, v)) for v in itertools.product(*values)]
+
     print(len(jobs), "jobs created")
     print("Writing each job", args.reps, "time(s) to", args.file)
 
+    # Repeats each job specified number of times
+    output = []
+    for job in jobs:
+        for i in range(args.reps):
+            output.append(job)
+
+    # Writes jobs to json file
     with open(args.file, "w") as f:
-        f.write(json.dumps(jobs))
+        f.write(json.dumps(output))
