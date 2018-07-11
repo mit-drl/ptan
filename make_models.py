@@ -4,14 +4,14 @@ import json
 import subprocess
 
 settings = {
-    "epsilon_frames": [2000000],
-     "epsilon_start": [2.0],
+    "epsilon_frames": [10 ** 6, 10 ** 6 / 2, 10 ** 6 * 2],
+     "epsilon_start": [1.0],
      "epsilon_final": [0.1],
-     "learning_rate": [0.00003, 0.00001],
+     "learning_rate": [0.00003, 0.000025],
              "gamma": [0.99],
          "dqn_model": ["FSADQNScaling"],
                "fsa": [True],
-           "machine": ["ngcv1"],
+           "machine": ["ngcv4"],
     "replay_initial": [500],
     "video_interval": [1000],
         "frame_stop": [3000]
@@ -22,6 +22,7 @@ if __name__ == "__main__":
     parser.add_argument("--reps", default=1, type=int, help="Number of repeat jobs")
     parser.add_argument("--file", default='', help="Output file")
     parser.add_argument("--run", default=False, action="store_true", help="Run jobs")
+    parser.add_argument("-v", default=False, action="store_true", help="Enable verbose output")
 
     args = parser.parse_args()
     if len(args.file) == 0:
@@ -44,6 +45,12 @@ if __name__ == "__main__":
     with open(args.file, "w") as f:
         f.write(json.dumps(output))
 
+    if args.v:
+        print(output)
+
     if args.run:
         # Runs jobs
-        subprocess.call("python run_all.py --file " + args.file, shell=True)
+        if args.v:
+            subprocess.call("python run_all.py -v --file " + args.file, shell=True)
+        else:
+            subprocess.call("python run_all.py --file " + args.file, shell=True)
