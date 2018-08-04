@@ -4,8 +4,8 @@ from gym.envs.registration import register
 # ----------------------------------------
 
 register(
-    id='fsa-manipulator',
-    entry_point='gym_fsa_atari.envs:ReacherEnv',
+    id='fsa-manipulator-v0',
+    entry_point='gym_fsa_atari.envs:ManipulatorEnv',
     max_episode_steps=50,
     reward_threshold=-3.75,
 )
