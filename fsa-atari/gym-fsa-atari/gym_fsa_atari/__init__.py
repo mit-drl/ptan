@@ -1,5 +1,16 @@
 from gym.envs.registration import register
 
+# Mujoco
+# ----------------------------------------
+
+register(
+    id='fsa-manipulator',
+    entry_point='gym_fsa_atari.envs:ReacherEnv',
+    max_episode_steps=50,
+    reward_threshold=-3.75,
+)
+
+
 # Atari
 # ----------------------------------------
 
