@@ -4,6 +4,47 @@ import csv
 import yaml
 import pickle
 
+def add_experiment(job_id, results_path):
+    outfile = "/output.txt"
+    paramfile = "/params.txt"
+    modelfile = "/model/data.pkl"
+    tabulatedfile = "/tabulated_experiments.csv"
+
+    file_exists = True
+    if not os.path.exists(results_path + tabulatedfile):
+        file_exists = False
+
+    skip_cols = ['env_name', 'stop_reward', 'run_name', 'replay_size', 'replay_initial', 'target_net_sync',
+                'gamma', 'batch_size', 'video_interval', 'fsa', 'plot', 'telemetry']
+
+    column_names = ['job_id']
+    column_entries = [str(job_id)]
+    with open(results_path + "/" + job_id + paramfile) as f:
+        for line in f:
+            entries = line.rstrip('\n').split(": ")
+            if entries[0] in skip_cols:
+                continue
+            column_names.append(entries[0])
+            column_entries.append(entries[1])
+    column_names = ','.join(column_names) + '\n'
+    column_entries = ','.join(column_entries) + '\n'
+
+    with open(results_path + tabulatedfile, 'a') as f:
+        if not file_exists:
+            f.write(column_names)
+        f.write(column_entries)
+
+def tabulate_experiments():
+    curdir = os.path.abspath(__file__)
+    results_path = os.path.abspath(os.path.join(curdir, '../results/'))
+    tabulatedfile = "/tabulated_experiments.csv"
+    if os.path.exists(results_path + tabulatedfile):
+        os.remove(results_path + tabulatedfile)
+    job_ids = os.listdir(results_path)
+    job_ids.sort(key=int)
+    for job_id in job_ids:
+        add_experiment(job_id, results_path)
+
 def visualize_data(job_list):
     print("Plotting results for jobs {}".format(job_list))
     curdir = os.path.abspath(__file__)
@@ -53,23 +94,4 @@ def visualize_data(job_list):
 
 
 if __name__ == "__main__":
-    # DQN: 81001, 81002, 81003
-    # DQN: 81342, 81343, 81344
-    # Best DQN: 81001, lr: 0.001
-
-    # Affine: 81389, 81390, 81391
-    # Bias: 80941, 82000, 81999, 81998 | BEST: 81999
-    # Scaling: 80940, 80939, 80938
-
-    # 10 million frame runs: 81664, 81665, 81666, 82109
-
-    # Lasers only: 90820 [messed up], 91649
-    # job_list = [90820, 91649, 91702, 1, 91782, 91918, 92062, 2, 92235]
-    job_list = [92331, 92334, 92335, 92358, 3]
-    # job_list = [81664, 81665, 81666, 82109]
-    # job_list = [81389, 81390, 81391, 80456]
-    # job_list = [81389, 81390, 81391, 81001]
-    # job_list = [80380, 81001, 81002]
-    # job_list = [80380, 80381, 80453, 80454]
-    # job_list = [80379, 80380, 80381, 80382]
-    visualize_data(job_list)
+    tabulate_experiments()

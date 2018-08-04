@@ -49,7 +49,7 @@ class LogicOracleSpaceInvaders(LogicOracle):
         left = ram[16] % 2  # whether the aliens are heading left
 
         # return (real_laser, saucer, aliens, dead)
-        # return (laser, aliens)
+        # return (real_laser, aliens)
         return (real_laser)
 
     def get_logic_meanings(self):

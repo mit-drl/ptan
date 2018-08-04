@@ -11,48 +11,48 @@ Debug Mode: False
 CLI output format type: json
 """
 
-job_name_prefix = "only_real_laser"
+job_name_prefix = "only_real_laser_no_fsa"
 
 jobs = [
-#     {
-#         "epsilon_frames": 10 ** 6 * 2,
-#         "epsilon_start": 1.0,
-#         "epsilon_final": 0.1,
-#         "learning_rate": 0.00005,
-#         "gamma": 0.99,
-#         "fsa": True,
-#         "machine": "ngcv4",
-#         "replay_initial": 50000,
-#         "video_interval": 1000000,
-#         "frame_stop": 3010000,
-#         "dqn_model": "FSADQNBias"
-#     },
-#     {
-#         "epsilon_frames": 10 ** 6,
-#         "epsilon_start": 1.0,
-#         "epsilon_final": 0.1,
-#         "learning_rate": 0.00005,
-#         "gamma": 0.99,
-#         "fsa": True,
-#         "machine": "ngcv4",
-#         "replay_initial": 50000,
-#         "video_interval": 1000000,
-#         "frame_stop": 3010000,
-#         "dqn_model": "FSADQNBias"
-#     },
-#     {
-#         "epsilon_frames": 10 ** 6 /2,
-#         "epsilon_start": 1.0,
-#         "epsilon_final": 0.1,
-#         "learning_rate": 0.00005,
-#         "gamma": 0.99,
-#         "fsa": True,
-#         "machine": "ngcv4",
-#         "replay_initial": 50000,
-#         "video_interval": 1000000,
-#         "frame_stop": 3010000,
-#         "dqn_model": "FSADQNBias"
-#     },
+    {
+        "epsilon_frames": 10 ** 6,
+        "epsilon_start": 1.0,
+        "epsilon_final": 0.1,
+        "learning_rate": 0.00005,
+        "gamma": 0.99,
+        "fsa": True,
+        "machine": "ngcv4",
+        "replay_initial": 50000,
+        "video_interval": 1000000,
+        "frame_stop": 1700000,
+        "dqn_model": "FSADQNBias"
+    },
+    {
+        "epsilon_frames": 10 ** 6 * 2,
+        "epsilon_start": 1.0,
+        "epsilon_final": 0.1,
+        "learning_rate": 0.00005,
+        "gamma": 0.99,
+        "fsa": True,
+        "machine": "ngcv4",
+        "replay_initial": 50000,
+        "video_interval": 1000000,
+        "frame_stop": 1700000,
+        "dqn_model": "FSADQNBias"
+    },
+    {
+        "epsilon_frames": 10 ** 6 / 2,
+        "epsilon_start": 1.0,
+        "epsilon_final": 0.1,
+        "learning_rate": 0.00005,
+        "gamma": 0.99,
+        "fsa": True,
+        "machine": "ngcv4",
+        "replay_initial": 50000,
+        "video_interval": 1000000,
+        "frame_stop": 1700000,
+        "dqn_model": "FSADQNBias"
+    },
     {
         "epsilon_frames": 10 ** 6,
         "epsilon_start": 1.0,
@@ -63,35 +63,74 @@ jobs = [
         "machine": "ngcv4",
         "replay_initial": 50000,
         "video_interval": 1000000,
-        "frame_stop": 3010000,
-        "dqn_model": "FSADQNBiasIndex"
+        "frame_stop": 1700000,
+        "dqn_model": "FSADQNBias"
+    },
+    {
+        "epsilon_frames": 10 ** 6 / 2,
+        "epsilon_start": 1.0,
+        "epsilon_final": 0.1,
+        "learning_rate": 0.0001,
+        "gamma": 0.99,
+        "fsa": True,
+        "machine": "ngcv4",
+        "replay_initial": 50000,
+        "video_interval": 1000000,
+        "frame_stop": 1700000,
+        "dqn_model": "FSADQNBias"
+    },
+    {
+        "epsilon_frames": 10 ** 6 * 2,
+        "epsilon_start": 1.0,
+        "epsilon_final": 0.1,
+        "learning_rate": 0.0001,
+        "gamma": 0.99,
+        "fsa": True,
+        "machine": "ngcv4",
+        "replay_initial": 50000,
+        "video_interval": 1000000,
+        "frame_stop": 1700000,
+        "dqn_model": "FSADQNBias"
+    },
+    {
+        "epsilon_frames": 10 ** 6,
+        "epsilon_start": 1.0,
+        "epsilon_final": 0.1,
+        "learning_rate": 0.00015,
+        "gamma": 0.99,
+        "fsa": True,
+        "machine": "ngcv4",
+        "replay_initial": 50000,
+        "video_interval": 1000000,
+        "frame_stop": 1700000,
+        "dqn_model": "FSADQNBias"
+    },
+    {
+        "epsilon_frames": 10 ** 6,
+        "epsilon_start": 1.0,
+        "epsilon_final": 0.1,
+        "learning_rate": 0.0002,
+        "gamma": 0.99,
+        "fsa": True,
+        "machine": "ngcv4",
+        "replay_initial": 50000,
+        "video_interval": 1000000,
+        "frame_stop": 1700000,
+        "dqn_model": "FSADQNBias"
+    },
+    {
+        "epsilon_frames": 10 ** 6,
+        "epsilon_start": 1.0,
+        "epsilon_final": 0.2,
+        "learning_rate": 0.00005,
+        "gamma": 0.99,
+        "fsa": True,
+        "machine": "ngcv4",
+        "replay_initial": 50000,
+        "video_interval": 1000000,
+        "frame_stop": 1700000,
+        "dqn_model": "FSADQNBias"
     }
-    # {
-    #     "epsilon_frames": 10 ** 6,
-    #     "epsilon_start": 1.0,
-    #     "epsilon_final": 0.1,
-    #     "learning_rate": 0.00005,
-    #     "gamma": 0.99,
-    #     "fsa": True,
-    #     "machine": "ngcv4",
-    #     "replay_initial": 50000,
-    #     "video_interval": 1000000,
-    #     "frame_stop": 10010000,
-    #     "dqn_model": "FSADQN"
-    # },
-    # {
-    #     "epsilon_frames": 10 ** 6,
-    #     "epsilon_start": 1.0,
-    #     "epsilon_final": 0.1,
-    #     "learning_rate": 0.00005,
-    #     "gamma": 0.99,
-    #     "fsa": True,
-    #     "machine": "ngcv4",
-    #     "replay_initial": 50000,
-    #     "video_interval": 1000000,
-    #     "frame_stop": 10010000,
-    #     "dqn_model": "FSADQNScaling"
-    # }
 
 ]  # list of dictionaries (json)
 

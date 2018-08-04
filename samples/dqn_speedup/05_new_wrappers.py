@@ -13,6 +13,7 @@ import json
 import os
 import pickle
 import numpy as np
+import datetime
 
 from gym import wrappers
 
@@ -40,9 +41,12 @@ def play_func(params, net, cuda, fsa, exp_queue, fsa_nvec=None):
         selector = ptan.actions.EpsilonGreedyActionSelectorFsa(fsa_nvec, epsilon=params['epsilon_start'])
         if 'Index' in net.__class__.__name__:
             epsilon_tracker = common.IndexedEpsilonTracker(selector, params, fsa_nvec)
+            agent = ptan.agent.DQNAgent(net, selector, device=device, fsa=fsa, epsilon_tracker=epsilon_tracker)
         else:
-            epsilon_tracker = common.IndexedEpsilonTrackerNoStates(selector, params, fsa_nvec)
-        agent = ptan.agent.DQNAgent(net, selector, device=device, fsa=fsa, epsilon_tracker=epsilon_tracker)
+            epsilon_tracker = common.EpsilonTracker(selector, params)
+            agent = ptan.agent.DQNAgent(net, selector, device=device, fsa=fsa)
+            # epsilon_tracker = common.IndexedEpsilonTrackerNoStates(selector, params, fsa_nvec)
+
     exp_source = ptan.experience.ExperienceSourceFirstLast(env, agent, gamma=params['gamma'], steps_count=1)
     exp_source_iter = iter(exp_source)
 
@@ -54,7 +58,7 @@ def play_func(params, net, cuda, fsa, exp_queue, fsa_nvec=None):
             exp = next(exp_source_iter)
             exp_queue.put(exp)
 
-            if not fsa:
+            if not fsa or 'Index' not in net.__class__.__name__:
                 epsilon_tracker.frame(frame_idx)
 
             new_rewards = exp_source.pop_total_rewards()
@@ -130,10 +134,6 @@ if __name__ == "__main__":
         if not os.path.exists(video_path):
             os.makedirs(video_path)
 
-    with open(params_path + "/params.txt", "w+") as f:
-        for param, value in params.items():
-            f.write(param + ": " + str(value) + "\n")
-
     if distutils.spawn.find_executable('avconv') is not None:
         print('using avconv')
     elif distutils.spawn.find_executable('ffmpeg') is not None:
@@ -144,10 +144,10 @@ if __name__ == "__main__":
     env = make_env(params)
 
     if args.fsa:
-        net = dqn_model.FSADQNBiasIndex(env.observation_space.spaces['image'].shape,
+        net = dqn_model.FSADQNBias(env.observation_space.spaces['image'].shape,
                                            env.observation_space.spaces['logic'].nvec,
                                            env.action_space.n).to(device)
-        model_name = 'FSADQNBiasIndex'
+        model_name = 'FSADQNBias'
         # net = dqn_model.FSADQNConvOneLogic(env.observation_space.spaces['image'].shape,
         #                        env.observation_space.spaces['logic'].nvec, env.action_space.n).to(device)
     else:
@@ -176,6 +176,22 @@ if __name__ == "__main__":
                                        env.action_space.n).to(device)
         model_name = model
 
+    with open(params_path + "/params.txt", "w+") as f:
+        for param, value in params.items():
+            f.write(param + ": " + str(value) + "\n")
+
+        now = datetime.datetime.now()
+        f.write("date: " + now.strftime('%Y-%m-%d') + "\n")
+        f.write("hour: " + now.strftime('%H:%M') + "\n")
+
+        nvec_string = str(env.env.env.env.env.env.env.env.env.env.logic_oracle.get_logic_observation_space().nvec.tolist())
+        f.write("nvec: " + nvec_string + "\n")
+
+        logic_states = str(env.env.env.env.env.env.env.env.env.env.logic_oracle.get_logic_meanings())
+        f.write("logic_states: " + logic_states + "\n")
+
+        f.write("model: " + model_name + "\n")
+
     print("using model {}".format(model_name))
 
     tgt_net = ptan.agent.TargetNet(net)
@@ -185,9 +201,9 @@ if __name__ == "__main__":
                                        env.action_space.n).to(device)
 
     buffer = ptan.experience.ExperienceReplayBuffer(experience_source=None, buffer_size=params['replay_size'])
-    optimizer = optim.Adam(net.parameters(), lr=params['learning_rate'])
+    # optimizer = optim.Adam(net.parameters(), lr=params['learning_rate'])
     optimizer_tm = optim.Adam(tm_net.parameters(), lr=params['learning_rate'])
-    # optimizer = optim.RMSprop(net.parameters(), lr=params['learning_rate'], momentum=0.95, eps=0.01)
+    optimizer = optim.RMSprop(net.parameters(), lr=params['learning_rate'], momentum=0.95, eps=0.01)
 
     exp_queue = mp.Queue(maxsize=PLAY_STEPS * 2)
 

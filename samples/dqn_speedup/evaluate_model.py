@@ -50,7 +50,10 @@ if __name__ == "__main__":
 
     dqn_models = {
         'FSADQN': dqn_model.FSADQN,
-        'FSADQNParallel': dqn_model.FSADQNParallel,
+        'FSADQNBias': dqn_model.FSADQNBias,
+        'FSADQNBiasIndex': dqn_model.FSADQNBiasIndex,
+        'FSADQNScaling': dqn_model.FSADQNScaling,
+        'FSADQNAffine': dqn_model.FSADQNAffine,
         'FSADQNIndexOutput' : dqn_model.FSADQNIndexOutput,
         'FSADQNATTNMatchingFC': dqn_model.FSADQNATTNMatchingFC,
         'FSADQNATTNMatching': dqn_model.FSADQNATTNMatching,

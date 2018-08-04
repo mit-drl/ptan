@@ -95,7 +95,7 @@ HYPERPARAMS = {
         'stop_reward': 50.0,
         'run_name': 'fsa-invaders',
         'replay_size': 10 ** 6,
-        'replay_initial': 500,
+        'replay_initial': 50000,
         'target_net_sync': 10000,
         'epsilon_frames': 10 ** 6,
         'epsilon_start': 1.0,
@@ -105,7 +105,7 @@ HYPERPARAMS = {
         'gamma': 0.99,
         'batch_size': 32,
         'video_interval': 1000000,
-        'frame_stop': 3010000
+        'frame_stop': 1700000
     },
     'mr': {
         'env_name': "MontezumaRevengeNoFrameskip-v4",
