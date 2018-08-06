@@ -96,7 +96,7 @@ class DQNAgent(BaseAgent):
         if self.epsilon_tracker and self.fsa:
                 self.epsilon_tracker.frame(tuple(states['logic'][0][-1].cpu().numpy()))
         q = q_v.data.cpu().numpy()
-        if self.fsa:
+        if self.fsa and self.epsilon_tracker:
             actions = self.action_selector(q, tuple(states['logic'][0][-1].cpu().numpy()))
         else:
             actions = self.action_selector(q)

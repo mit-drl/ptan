@@ -21,16 +21,17 @@ def make_env(params):
     return env
 
 if __name__ == "__main__":
+    job_id = '92504'
     curdir = os.path.abspath(__file__)
-    model_path = os.path.abspath(os.path.join(curdir, '../../../results/model'))
+    model_path = os.path.abspath(os.path.join(curdir, '../../../results/' + job_id + '/model'))
     data_file = "/data.pkl"
     with open(model_path + data_file, 'rb') as input:
         data = pickle.load(input)
         score = data[0]
-        model_name = data[1]
-        params = data[2]
-        args = data[3]
-
+        tm_acc = data[1]
+        model_name = data[2]
+        params = data[3]
+        args = data[4]
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--plot", default=False, action="store_true", help="Plot reward")

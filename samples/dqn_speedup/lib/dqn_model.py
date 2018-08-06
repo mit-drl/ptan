@@ -93,10 +93,15 @@ class FSADQN(nn.Module):
         return int(np.prod(o.size()))
 
     def forward(self, x):
-        x = x['image']
-        fx = x.float() / 256
+        image = x['image']
+        fx = image.float() / 256
         conv_out = self.conv(fx).view(fx.size()[0], -1)
-        return self.fc(conv_out)
+        image_q = self.fc(conv_out)
+
+        logic = x['logic'].view(fx.size()[0], -1).float()
+
+        print(float(torch.max(image_q).cpu()), float(torch.max(logic).cpu()))
+        return image_q
 
 class TMPredict(nn.Module):
     def __init__(self, input_shape, fsa_nvec, n_actions):
@@ -196,6 +201,7 @@ class FSADQNBias(nn.Module):
 
         logic = x['logic'].view(fx.size()[0], -1).float()
         logic_q = self.fsa_fc(logic/self.fsa_nvec)
+        print(float(torch.max(image_q).cpu()), float(torch.max(logic_q).cpu()), float(torch.max(logic).cpu()))
         return image_q + logic_q
 
 class FSADQNBiasIndex(FSADQNBias):

@@ -38,11 +38,12 @@ def play_func(params, net, cuda, fsa, exp_queue, fsa_nvec=None):
         epsilon_tracker = common.EpsilonTracker(selector, params)
         agent = ptan.agent.DQNAgent(net, selector, device=device, fsa=fsa)
     else:
-        selector = ptan.actions.EpsilonGreedyActionSelectorFsa(fsa_nvec, epsilon=params['epsilon_start'])
         if 'Index' in net.__class__.__name__:
+            selector = ptan.actions.EpsilonGreedyActionSelectorFsa(fsa_nvec, epsilon=params['epsilon_start'])
             epsilon_tracker = common.IndexedEpsilonTracker(selector, params, fsa_nvec)
             agent = ptan.agent.DQNAgent(net, selector, device=device, fsa=fsa, epsilon_tracker=epsilon_tracker)
         else:
+            selector = ptan.actions.EpsilonGreedyActionSelector(epsilon=params['epsilon_start'])
             epsilon_tracker = common.EpsilonTracker(selector, params)
             agent = ptan.agent.DQNAgent(net, selector, device=device, fsa=fsa)
             # epsilon_tracker = common.IndexedEpsilonTrackerNoStates(selector, params, fsa_nvec)
@@ -64,7 +65,7 @@ def play_func(params, net, cuda, fsa, exp_queue, fsa_nvec=None):
             new_rewards = exp_source.pop_total_rewards()
             new_scores = exp_source.pop_total_scores()
             if new_rewards:
-                if not fsa:
+                if not fsa or 'Index' not in net.__class__.__name__:
                     new_score = [] if not new_scores else new_scores[0]
                     if reward_tracker.reward(new_rewards[0], new_score, frame_idx, selector.epsilon, params['plot']):
                         break

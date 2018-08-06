@@ -48,7 +48,7 @@ class ExperienceSource:
         self.vectorized = vectorized
 
     def __iter__(self):
-        states, agent_states, histories, cur_rewards, cur_steps, last_logics, cur_scores = [], [], [], [], [], [], []
+        states, agent_states, histories, cur_rewards, cur_steps, cur_scores = [], [], [], [], [], []
         env_lens = []
         for env in self.pool:
             obs = env.reset()
