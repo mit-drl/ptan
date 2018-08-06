@@ -14,3 +14,4 @@ cloud.json
 local.json
 job_number.txt
 fsa-atari/experiments
+*MUJOCO_LOG.TXT

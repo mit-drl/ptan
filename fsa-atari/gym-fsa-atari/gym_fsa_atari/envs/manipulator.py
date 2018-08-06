@@ -8,7 +8,7 @@ class ManipulatorEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         mujoco_env.MujocoEnv.__init__(self, 'manipulator.xml', 2)
 
     def step(self, a):
-        vec = self.get_body_com("fingertip")-self.get_body_com("target")
+        vec = self.get_body_com("fingertip")-self.get_body_com("target_ball")
         reward_dist = - np.linalg.norm(vec)
         reward_ctrl = - np.square(a).sum()
         reward = reward_dist + reward_ctrl
@@ -39,5 +39,5 @@ class ManipulatorEnv(mujoco_env.MujocoEnv, utils.EzPickle):
             np.sin(theta),
             self.sim.data.qpos.flat[2:],
             self.sim.data.qvel.flat[:2],
-            self.get_body_com("fingertip") - self.get_body_com("target")
+            self.get_body_com("fingertip") - self.get_body_com("target_ball")
 ])
