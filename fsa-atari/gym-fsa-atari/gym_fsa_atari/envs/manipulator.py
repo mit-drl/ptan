@@ -23,6 +23,9 @@ class ManipulatorEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         if reward_dist > -1e-2:
             print("GOT TO GOAL")
             self.current_goal += 1
+            reward = 1
+        else:
+            reward = 0
         self.do_simulation(a, self.frame_skip)
         ob = self._get_obs()
         done = False

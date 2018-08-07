@@ -31,8 +31,8 @@ keys_to_action = {
     'g': np.array([0, 0, 0, 0, -1])
 }
 env.reset()
-#for _ in range(3000):
-done = False
+env.render()
+observation, reward, done, info = env.step(np.array([0, 0, 0, 0, 0]))
 while not done:
     ch = getchar()
     print(ch)
