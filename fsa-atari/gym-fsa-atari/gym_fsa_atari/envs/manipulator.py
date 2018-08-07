@@ -1,6 +1,7 @@
 import numpy as np
 from gym import utils
 from gym_fsa_atari.envs import mujoco_env
+from mujoco_py.generated import const
 
 class ManipulatorEnv(mujoco_env.MujocoEnv, utils.EzPickle):
     def __init__(self):
@@ -34,7 +35,9 @@ class ManipulatorEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         return ob, reward, done, dict(reward_dist=reward_dist, reward_ctrl=reward_ctrl)
 
     def viewer_setup(self):
-        self.viewer.cam.trackbodyid = 0
+        self.viewer.cam.type = const.CAMERA_FIXED
+        self.viewer.cam.fixedcamid = 0
+        # self.viewer.cam.trackbodyid = 0
 
     def reset_model(self):
         qpos = self.np_random.uniform(low=-0.1, high=0.1, size=self.model.nq) + self.init_qpos
