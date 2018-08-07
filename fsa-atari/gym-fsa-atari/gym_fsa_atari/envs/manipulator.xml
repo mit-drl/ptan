@@ -18,7 +18,7 @@
   <default>
     <geom friction=".7" solimp="0.9 0.97 0.001" solref=".005 1"/>
     <joint solimplimit="0 0.99 0.01" solreflimit=".005 1"/>
-    <general ctrllimited="true"/>
+    <general ctrllimited="false"/>
     <tendon width="0.01"/>
     <site size=".003 .003 .003" rgba=".5 .5 .5 .3" group="3"/>
 
@@ -127,6 +127,7 @@
       <site  name="ball" type="sphere"/>
     </body>
 
+    <!--
     <body name="peg" pos="-.4 0 .4" childclass="object">
       <joint name="peg_x" type="slide" axis="1 0 0" ref="-.4"/>
       <joint name="peg_z" type="slide" axis="0 0 1" ref=".4"/>
@@ -141,16 +142,17 @@
       <site name="peg_grasp" type="box" pos="0 0 0"/>
       <site name="peg_tip"   type="box" pos="0 0 -.113"/>
     </body>
+    -->
 
-    <!-- receptacles -->
+    <!-- receptacles
     <body name="slot" pos="-.405 0 .2" euler="0 20 0" childclass="obstacle">
       <geom name="slot_0" type="box" pos="-.0252 0 -.083" size=".0198 .01 .035"/>
       <geom name="slot_1" type="box" pos=" .0252 0 -.083" size=".0198 .01 .035"/>
       <geom name="slot_2" type="box" pos="  0   0 -.138" size=".045 .01 .02"/>
       <site name="slot" type="box" pos="0 0 0"/>
       <site name="slot_end" type="box" pos="0 0 -.05"/>
-    </body>
-
+    </body>-->
+    <!--
     <body name="cup" pos=".3 0 .4" euler="0 -15 0" childclass="obstacle">
       <geom name="cup_0" type="capsule" size=".008" fromto="-.03 0 .06 -.03 0 -.015" />
       <geom name="cup_1" type="capsule" size=".008" fromto="-.03 0 -.015 0 0 -.04" />
@@ -158,6 +160,7 @@
       <geom name="cup_3" type="capsule" size=".008" fromto=".03 0 -.015 .03 0 .06" />
       <site name="cup" size=".005"/>
     </body>
+    -->
 
     <!-- targets -->
     <body name="target_ball" pos=".4 .001 .4" childclass="ghost">
@@ -165,6 +168,11 @@
       <site  name="target_ball" type="sphere"/>
     </body>
 
+    <body name="target_ball_2" pos="-0.3 .001 .4" childclass="ghost">
+      <geom  name="target_ball_2" type="sphere" size=".022" />
+      <site  name="target_ball_2" type="sphere"/>
+    </body>
+    <!--
     <body name="target_peg" pos="-.2 .001 .4" childclass="ghost">
       <geom name="target_blade" type="capsule" size=".005" fromto="0 0 -.013 0 0 -.113"/>
       <geom name="target_guard" type="capsule" size=".005" fromto="-.017 0 -.043 .017 0 -.043"/>
@@ -173,7 +181,7 @@
       <site name="target_peg_pinch" type="box" pos="0 0 -.025"/>
       <site name="target_peg_grasp" type="box" pos="0 0 0"/>
       <site name="target_peg_tip"   type="box" pos="0 0 -.113"/>
-    </body>
+    </body>-->
 
   </worldbody>
 
