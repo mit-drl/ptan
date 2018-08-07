@@ -50,12 +50,12 @@ class LogicOracleSpaceInvaders(LogicOracle):
 
         # return (real_laser, saucer, aliens, dead)
         # return (real_laser, aliens)
-        return (real_laser)
+        return (aliens)
 
     def get_logic_meanings(self):
         # return ['Laser Active', 'Saucer Present', 'Remaining Aliens', 'Player Death']
         # return ['Laser Active', 'Remaining Aliens']
-        return ['Laser Active']
+        return ['Remaining Aliens']
 
     def get_logic_observation_space(self):
         # return spaces.MultiDiscrete([2, 2, 4, 2])

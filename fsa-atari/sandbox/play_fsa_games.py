@@ -102,7 +102,6 @@ def play(env, transpose=True, fps=30, zoom=None, callback=None, keys_to_action=N
     screen = pygame.display.set_mode(video_size)
     clock = pygame.time.Clock()
 
-
     while running:
         if env_done:
             env_done = False
@@ -121,10 +120,14 @@ def play(env, transpose=True, fps=30, zoom=None, callback=None, keys_to_action=N
             im = obs['image']
             logic = obs['logic']
             ram = env.env._get_ram()
+            with open('ram.csv', "a") as f:
+                f.write(",".join(str(r) for r in ram))
+
             # didnt work: < 80
             # print("{:3d} {:3d} {:3d} {:3d}".format(ram[78], ram[76], ram[83], ram[84]))
-            # print(ram[85:90])
-            print(logic)
+            # 20:25 are promising. 83, 84, 87, 87 are promising; 102
+            print(ram[110:120])
+            # print(logic)
             if len(im.shape) == 2:
                 im = im[:, :, None]
             if im.shape[2] == 1:
