@@ -7,11 +7,11 @@
     <texture name="background" builtin="flat" type="2d" mark="random" markrgb="1 1 1" width="800" height="800" rgb1=".2 .3 .4"/>
     <material name="background" texture="background" texrepeat="1 1" texuniform="true"/>
   </asset>
-
+  <!--
   <visual>
     <map shadowclip=".5"/>
     <quality shadowsize="2048"/>
-  </visual>>
+  </visual>-->
 
   <option timestep="0.001" cone="elliptic"/>
 
@@ -24,11 +24,11 @@
 
     <default class="arm">
       <geom type="capsule" material="self" density="500"/>
-      <joint type="hinge" pos="0 0 0" axis="0 -1 0" limited="true"/>
+      <joint type="hinge" pos="0 0 0" axis="0 0 -1" limited="true"/>
       <default class="hand">
         <joint damping=".5" range="-10 60"/>
         <geom size=".008"/>
-        <site  type="box" size=".018 .005 .005" pos=".022 0 -.002" euler="0 15 0" group="4"/>
+        <site  type="box" size=".018 .005 .005" pos=".022 0 -.002" euler="0 15 15" group="4"/>
         <default class="fingertip">
           <geom type="sphere" size=".008" material="effector"/>
           <joint damping=".01" stiffness=".01" range="-40 20"/>
@@ -57,60 +57,62 @@
   <worldbody>
     <!-- Arena -->
     <light name="light" directional="true" diffuse=".6 .6 .6" pos="0 0 1" specular=".3 .3 .3"/>
-    <geom name="floor" type="plane" pos="0 0 0" size=".4 .2 10" material="grid"/>
-    <geom name="wall1" type="plane" pos="-.682843 0 .282843" size=".4 .2 10" material="grid" zaxis="1 0 1"/>
-    <geom name="wall2" type="plane" pos=".682843 0 .282843" size=".4 .2 10" material="grid" zaxis="-1 0 1"/>
-    <geom name="background" type="plane" pos="0 .2 .5" size="1 .5 10" material="background" zaxis="0 -1 0"/>
-    <camera name="fixed" pos="0 -16 .4" xyaxes="1 0 0 0 0 1" fovy="4"/>
+    <geom name="floor" type="plane" pos="0 0 .370" size=".45 .45 .45" material="grid"/>
+    <geom name="wall1" type="plane" pos="-.45 0 .282843" size=".45 .45 10" material="grid" zaxis="1 0 0"/>
+    <geom name="wall2" type="plane" pos=".45 0 .282843" size=".45 .45 10" material="grid" zaxis="-1 0 0"/>
+    <geom name="wall3" type="plane" pos="0 -.45 .282843" size=".45 .45 10" material="grid" zaxis="0 1 0"/>
+    <geom name="wall4" type="plane" pos="0 .45 .282843" size=".45 .45 10" material="grid" zaxis="0 -1 0"/>
+    <!--geom name="background" type="plane" pos="0 .2 .5" size="1 .5 10" material="background" zaxis="0 -1 0"/-->
+    <camera name="fixed" pos="0 0 3" xyaxes="1 0 0 0 1 0" fovy="45"/>
 
     <!-- Arm -->
-    <geom name="arm_root" type="cylinder" fromto="0 -.022 .4 0 .022 .4" size=".024"
+    <geom name="arm_root" type="cylinder" fromto="0 0 .378 0 0 .422" size=".024"
           material="decoration" contype="0" conaffinity="0"/>
     <body name="upper_arm" pos="0 0 .4" childclass="arm">
-      <joint name="arm_root" damping="2" limited="false"/>
-      <geom  name="upper_arm"  size=".02" fromto="0 0 0 0 0 .18"/>
-      <body  name="middle_arm" pos="0 0 .18" childclass="arm">
-        <joint name="arm_shoulder" damping="1.5" range="-160 160"/>
-        <geom  name="middle_arm"  size=".017" fromto="0 0 0 0 0 .15"/>
-        <body  name="lower_arm" pos="0 0 .15">
+      <joint name="arm_root" damping="2" limited="false" axis="0 0 -1"/>
+      <geom  name="upper_arm"  size=".02" fromto="0 0 0 0 .18 0"/>
+      <body  name="middle_arm" pos="0 .18 0" childclass="arm">
+        <joint name="arm_shoulder" damping="1.5" range="-160 160" axis="0 0 -1"/>
+        <geom  name="middle_arm"  size=".017" fromto="0 0 0 0 .15 0"/>
+        <body  name="lower_arm" pos="0 .15 0">
           <joint name="arm_elbow" damping="1" range="-160 160"/>
-          <geom  name="lower_arm" size=".014" fromto="0 0 0 0 0 .12"/>
-          <body  name="hand" pos="0 0 .12">
+          <geom  name="lower_arm" size=".014" fromto="0 0 0 0 .12 0"/>
+          <body  name="hand" pos="0 .12 0">
             <joint name="arm_wrist" damping=".5" range="-140 140" />
-            <geom  name="hand" size=".011" fromto="0 0 0 0 0 .03"/>
-            <geom  name="palm1"  fromto="0 0 .03  .03 0 .045" class="hand"/>
-            <geom  name="palm2"  fromto="0 0 .03 -.03 0 .045" class="hand"/>
-            <site  name="grasp" pos="0 0 .065"/>
-            <body  name="pinch site" pos="0 0 .090">
+            <geom  name="hand" size=".011" fromto="0 0 0 0 .03 0"/>
+            <geom  name="palm1"  fromto="0 .03 0  .03 .045 0" class="hand"/>
+            <geom  name="palm2"  fromto="0 .03 0 -.03 .045 0" class="hand"/>
+            <site  name="grasp" pos="0 .065 0"/>
+            <body  name="pinch site" pos="0 .090 0">
               <site  name="pinch"/>
               <inertial pos="0 0 0" mass="1e-6" diaginertia="1e-12 1e-12 1e-12"/>
               <camera name="hand" pos="0 -.3 0" xyaxes="1 0 0 0 0 1" mode="track"/>
             </body>
-            <site  name="palm_touch" type="box" group="4" size=".025 .005 .008" pos="0 0 .043"/>
+            <site  name="palm_touch" type="box" group="4" size=".025 .005 .008" pos="0 .043 0"/>
 
-            <body name="thumb" pos=".03 0 .045" euler="0 -90 0" childclass="hand">
-              <joint name="thumb"/>
-              <geom  name="thumb1"  fromto="0 0 0 .02 0 -.01" size=".007"/>
-              <geom  name="thumb2"  fromto=".02 0 -.01 .04 0 -.01" size=".007"/>
+            <body name="thumb" pos=".03 .045 0" euler="0 -90 0" childclass="hand">
+              <joint name="thumb" axis="1 0 0"/>
+              <geom  name="thumb1"  fromto="0 0 0 0 .02 -.01" size=".007"/>
+              <geom  name="thumb2"  fromto="0 .02 -.01 0 .04 -.01" size=".007"/>
               <site  name="thumb_touch" group="4"/>
-              <body  name="thumbtip" pos=".05 0 -.01" childclass="fingertip">
+              <body  name="thumbtip" pos="0 0.05 -.01" childclass="fingertip">
                 <joint name="thumbtip"/>
-                <geom  name="thumbtip1" pos="-.003 0 0" />
-                <geom  name="thumbtip2" pos=".003 0 0" />
+                <geom  name="thumbtip1" pos="0 -.003 0" />
+                <geom  name="thumbtip2" pos="0 .003 0" />
                 <site  name="thumbtip_touch" group="4"/>
               </body>
             </body>
 
-            <body name="finger" pos="-.03 0 .045" euler="0 90 180" childclass="hand">
-              <joint name="finger"/>
-              <geom  name="finger1"  fromto="0 0 0 .02 0 -.01" size=".007" />
-              <geom  name="finger2"  fromto=".02 0 -.01 .04 0 -.01" size=".007"/>
+            <body name="finger" pos="-.03 .045 0" euler="0 90 0" childclass="hand">
+              <joint name="finger" axis="1 0 0"/>
+              <geom  name="finger1"  fromto="0 0 0 0 .02 -.01" size=".007" />
+              <geom  name="finger2"  fromto="0 .02 -.01 0 .04 -.01" size=".007"/>
               <site  name="finger_touch"/>
-              <body  name="fingertip" pos=".05 0 -.01" childclass="fingertip">
+              <body  name="fingertip" pos="0 .05 -.01" childclass="fingertip">
                 <joint name="fingertip"/>
-                <geom  name="fingertip1" pos="-.003 0 0" />
-                <geom  name="fingertip2" pos=".003 0 0" />
-                <site  name="fingertip_touch"/>
+                <geom  name="fingertip1" pos="0 -.003 0" />
+                <geom  name="fingertip2" pos="0 .003 0" />
+                <site name="fingertip_touch"/>
               </body>
             </body>
           </body>
@@ -163,7 +165,7 @@
     -->
 
     <!-- targets -->
-    <body name="target_ball" pos=".4 .001 .4" childclass="ghost">
+    <body name="target_ball" pos=".3 .2 .4" childclass="ghost">
       <geom  name="target_ball" type="sphere" size=".022" />
       <site  name="target_ball" type="sphere"/>
     </body>

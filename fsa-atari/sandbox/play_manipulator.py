@@ -18,6 +18,18 @@ def getchar():
 
 
 env = gym.make("fsa-manipulator-v0")
+env.reset()
+'''
+for i in range(40000):
+    env.render()
+    action = env.action_space.sample()
+    if int(i /100) % 2  == 0:
+        action = np.array([0,0,0,0,1])
+    else:
+        action = np.array([0, 0, 0, 0, -1])
+    observation, reward, done, info = env.step(action)
+exit()
+'''
 keys_to_action = {
     'q': np.array([1, 0, 0, 0, 0]),
     'w': np.array([0, 1, 0, 0, 0]),
