@@ -121,10 +121,12 @@
     </body>
 
     <!-- props -->
-    <body name="ball" pos=".4 0 .4" childclass="object">
-      <joint name="ball_x" type="slide" axis="1 0 0" ref=".4"/>
+    <!-- vv for some reason the first element of "pos" also seems to control z axis starting location -->
+    <body name="ball" pos="0.012 0 0.4" childclass="object">
+      <joint name="ball_x" type="slide" axis="1 0 0"/>
+      <!-- vv this right here determines where the ball starts on the z axis! -->
       <joint name="ball_z" type="slide" axis="0 0 1" ref="0.012"/>
-      <joint name="ball_y" type="hinge" axis="0 1 0"/>
+      <joint name="ball_y" type="slide" axis="0 1 0"/>
       <geom  name="ball" type="sphere" size=".022" />
       <site  name="ball" type="sphere"/>
     </body>
