@@ -64,6 +64,7 @@ class ManipulatorEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         self.set_state(qpos, qvel)
         self.randomize_location('target_ball', x_range=(-.4, .4), y_range=(-.4, .4), z_range=(.4, .4))
         self.randomize_location('target_ball_2', x_range=(-.4, .4), y_range=(-.4, .4), z_range=(.4, .4))
+        self.randomize_location('ball', x_range=(-.4, .4), y_range=(-.4, .4), z_range=(.4, .4))
         return self._get_obs()
 
     def _get_obs(self):
