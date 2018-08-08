@@ -43,7 +43,7 @@ keys_to_action = {
     'f': np.array([0, 0, 0, -1, 0]),
     'g': np.array([0, 0, 0, 0, -1])
 }
-env.reset()
+
 env.render()
 observation, reward, done, info = env.step(np.array([0, 0, 0, 0, 0]))
 while not done:

@@ -138,6 +138,16 @@ class MujocoEnv(gym.Env):
     def get_site_com(self, site_name):
         return self.data.get_site_xpos(site_name)
 
+    def randomize_location(self, body, x_range, y_range, z_range):
+        """ randomizes the location of a body in range"""
+        x_coord = np.random.uniform(x_range[0], x_range[1])
+        y_coord = np.random.uniform(y_range[0], y_range[1])
+        z_coord = np.random.uniform(z_range[0], z_range[1])
+        body_id = self.model.body_name2id(body)
+        assert (np.array_equal(self.data.get_body_xpos(body), self.data.body_xpos[body_id]))
+        self.model.body_pos[body_id] = np.array([x_coord, y_coord, z_coord])
+        print("set", body, "to", x_coord, y_coord, z_coord)
+
     def state_vector(self):
         return np.concatenate([
             self.sim.data.qpos.flat,

@@ -168,7 +168,7 @@
 
     <!-- targets -->
     <body name="target_ball" pos=".3 .2 .4" childclass="ghost">
-      <geom  name="target_ball" type="sphere" size=".022" />
+      <geom  name="target_ball" type="sphere" size=".022" material="decoration"/>
       <site  name="target_ball" type="sphere"/>
     </body>
 
