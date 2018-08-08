@@ -58,10 +58,10 @@
     <!-- Arena -->
     <light name="light" directional="true" diffuse=".6 .6 .6" pos="0 0 1" specular=".3 .3 .3"/>
     <geom name="floor" type="plane" pos="0 0 .370" size=".45 .45 .45" material="grid"/>
-    <geom name="wall1" type="plane" pos="-.45 0 .282843" size=".45 .45 10" material="grid" zaxis="1 0 0"/>
+    <!--geom name="wall1" type="plane" pos="-.45 0 .282843" size=".45 .45 10" material="grid" zaxis="1 0 0"/>
     <geom name="wall2" type="plane" pos=".45 0 .282843" size=".45 .45 10" material="grid" zaxis="-1 0 0"/>
     <geom name="wall3" type="plane" pos="0 -.45 .282843" size=".45 .45 10" material="grid" zaxis="0 1 0"/>
-    <geom name="wall4" type="plane" pos="0 .45 .282843" size=".45 .45 10" material="grid" zaxis="0 -1 0"/>
+    <geom name="wall4" type="plane" pos="0 .45 .282843" size=".45 .45 10" material="grid" zaxis="0 -1 0"/-->
     <!--geom name="background" type="plane" pos="0 .2 .5" size="1 .5 10" material="background" zaxis="0 -1 0"/-->
     <camera name="fixed" pos="0 0 3" xyaxes="1 0 0 0 1 0" fovy="45"/>
 

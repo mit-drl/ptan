@@ -39,6 +39,12 @@ class ManipulatorEnv(mujoco_env.MujocoEnv, utils.EzPickle):
                 self.num_frames_till_end -= 1
             else:
                 done = True
+        ball_pos = self.get_body_com("ball")
+        ball_pos[2] = 0
+        ball_dist = np.linalg.norm(ball_pos)
+        if ball_dist > 0.545:
+            print("Ball went out of bounds!")
+            done = True
         return ob, reward, done, dict(reward_dist=reward_dist, reward_ctrl=reward_ctrl)
 
     def viewer_setup(self):
