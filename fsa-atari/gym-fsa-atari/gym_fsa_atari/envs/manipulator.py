@@ -2,6 +2,7 @@ import numpy as np
 from gym import utils
 from gym_fsa_atari.envs import mujoco_env
 from mujoco_py.generated import const
+from gym import spaces
 
 class ManipulatorEnv(mujoco_env.MujocoEnv, utils.EzPickle):
     def __init__(self):
@@ -60,3 +61,14 @@ class ManipulatorEnv(mujoco_env.MujocoEnv, utils.EzPickle):
             self.sim.data.qvel.flat[:2],
             self.to_goal()
         ])
+
+    def get_logic_state(self):
+        dist = np.linalg.norm(self.get_body_com("ball")-self.get_site_com("palm_touch"))
+        ball_in_hand = 1 if dist < 0.03 else 0
+        goal_A = 0 if self.current_goal < 1 else 1
+        goal_B = 0 if self.current_goal < 2 else 1
+        return (ball_in_hand, goal_A, goal_B)
+
+    # returns the logic's observation space
+    def get_logic_observation_space(self):
+        return spaces.MultiDiscrete([2, 2, 2])

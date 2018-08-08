@@ -28,6 +28,7 @@ for i in range(40000):
     else:
         action = np.array([0, 0, 0, 0, -1])
     observation, reward, done, info = env.step(action)
+    print(env.get_logic_state())
 exit()
 '''
 keys_to_action = {
@@ -61,4 +62,5 @@ while not done:
             # action = np.array([0, 0, 0, 0, 0]) # [root, shoulder, elbow, wrist, grasp]
             observation, reward, done, info = env.step(action)
             print("reward:", reward, "done:", done)
+            print(env.get_logic_state())
 
