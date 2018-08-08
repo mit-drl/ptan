@@ -57,10 +57,10 @@ while not done:
             action = keys_to_action[ch]
         else:
             action = np.array([0, 0, 0, 0, 0])
-        for _ in range(50):
+        for _ in range(25):
             env.render()
             # action = np.array([0, 0, 0, 0, 0]) # [root, shoulder, elbow, wrist, grasp]
             observation, reward, done, info = env.step(action)
-            print("reward:", reward, "done:", done)
+            print("reward:", reward)
             print(env.get_logic_state())
 

@@ -6,6 +6,7 @@ from gym import spaces
 
 class ManipulatorEnv(mujoco_env.MujocoEnv, utils.EzPickle):
     def __init__(self):
+        self.num_frames_till_end = None
         self.current_goal = -1
         utils.EzPickle.__init__(self)
         mujoco_env.MujocoEnv.__init__(self, 'manipulator.xml', 2)
@@ -25,6 +26,8 @@ class ManipulatorEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         if reward_dist > -1e-2:
             print("GOT TO GOAL")
             self.current_goal += 1
+            if self.current_goal == 2 and self.num_frames_till_end == None:
+                self.num_frames_till_end = 50
             reward = 1
         else:
             reward = 0
@@ -32,7 +35,10 @@ class ManipulatorEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         ob = self._get_obs()
         done = False
         if self.current_goal > 1:
-            done = True
+            if self.num_frames_till_end > 1:
+                self.num_frames_till_end -= 1
+            else:
+                done = True
         return ob, reward, done, dict(reward_dist=reward_dist, reward_ctrl=reward_ctrl)
 
     def viewer_setup(self):
@@ -64,11 +70,13 @@ class ManipulatorEnv(mujoco_env.MujocoEnv, utils.EzPickle):
 
     def get_logic_state(self):
         dist = np.linalg.norm(self.get_body_com("ball")-self.get_site_com("palm_touch"))
+        dist_between_thumbs = np.linalg.norm(self.get_body_com("thumbtip")-self.get_body_com("fingertip"))
         ball_in_hand = 1 if dist < 0.03 else 0
+        ball_gripped = 1 if ball_in_hand and dist_between_thumbs < 0.03 else 0
         goal_A = 0 if self.current_goal < 1 else 1
         goal_B = 0 if self.current_goal < 2 else 1
-        return (ball_in_hand, goal_A, goal_B)
+        return (ball_in_hand, ball_gripped, goal_A, goal_B)
 
     # returns the logic's observation space
     def get_logic_observation_space(self):
-        return spaces.MultiDiscrete([2, 2, 2])
+        return spaces.MultiDiscrete([2, 2, 2, 2])
