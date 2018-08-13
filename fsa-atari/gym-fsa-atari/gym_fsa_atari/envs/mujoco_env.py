@@ -150,7 +150,7 @@ class MujocoEnv(gym.Env):
 
     def randomize_location_circle(self, body, radius, z):
         theta = np.random.uniform(0, 2*np.pi)
-        r = np.random.uniform(0, radius)
+        r = np.random.uniform(0.01, radius)
         x, y = r * np.cos(theta), r * np.sin(theta)
         body_id = self.model.body_name2id(body)
         assert (np.array_equal(self.data.get_body_xpos(body), self.data.body_xpos[body_id]))
