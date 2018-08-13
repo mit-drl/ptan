@@ -75,14 +75,23 @@ class ManipulatorTwoArmsEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         ])
 
     def get_logic_state(self):
-        dist = np.linalg.norm(self.get_body_com("ball")-self.get_site_com("palm_touch"))
-        dist_between_thumbs = np.linalg.norm(self.get_body_com("thumbtip")-self.get_body_com("fingertip"))
-        ball_in_hand = 1 if dist < 0.03 else 0
-        ball_gripped = 1 if ball_in_hand and dist_between_thumbs < 0.03 else 0
-        goal_A = 0 if self.current_goal < 1 else 1
-        goal_B = 0 if self.current_goal < 2 else 1
-        return (ball_in_hand, ball_gripped, goal_A, goal_B)
+        ball_dist1 = np.linalg.norm(self.get_body_com("ball")-self.get_site_com("palm_touch"))
+        ball_dist2 = np.linalg.norm(self.get_body_com("ball") - self.get_site_com("palm_touch2"))
+        box_dist1 = np.linalg.norm(self.get_body_com("box_pommel") - self.get_site_com("palm_touch"))
+        box_dist2 = np.linalg.norm(self.get_body_com("box_pommel") - self.get_site_com("palm_touch2"))
+        dist_between_thumbs1 = np.linalg.norm(self.get_body_com("thumbtip")-self.get_body_com("fingertip"))
+        dist_between_thumbs2 = np.linalg.norm(self.get_body_com("thumbtip2") - self.get_body_com("fingertip2"))
+        ball_in_hand1 = 1 if ball_dist1 < 0.03 else 0
+        ball_in_hand2 = 1 if ball_dist2 < 0.03 else 0
+        box_in_hand1 = 1 if box_dist1 < 0.03 else 0
+        box_in_hand2 = 1 if box_dist2 < 0.03 else 0
+        ball_gripped1 = 1 if ball_in_hand1 and dist_between_thumbs1 < 0.04 else 0
+        ball_gripped2 = 1 if ball_in_hand2 and dist_between_thumbs2 < 0.04 else 0
+        box_gripped1 = 1 if box_in_hand1 and dist_between_thumbs1 < 0.04 else 0
+        box_gripped2 = 1 if box_in_hand2 and dist_between_thumbs2 < 0.04 else 0
+        return (ball_in_hand1, ball_in_hand2, box_in_hand1, box_in_hand2,
+                ball_gripped1, ball_gripped2, box_gripped1, box_gripped2)
 
     # returns the logic's observation space
     def get_logic_observation_space(self):
-        return spaces.MultiDiscrete([2, 2, 2, 2])
+        return spaces.MultiDiscrete([2, 2, 2, 2, 2, 2, 2, 2])

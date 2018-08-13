@@ -198,7 +198,10 @@
       <geom name="box_0" type="box" pos="-.035 0.01 0" size=".01 .035 .02"/>
       <geom name="box_1" type="box" pos=" .035 0.01 0" size=".01 .035 .02"/>
       <geom name="box_2" type="box" pos="  0   -.035 0" size=".045 .01 .02"/>
-      <geom name="box_3" type="sphere" pos="  0   -.065 0" size="0.025"/>
+      <geom name="box_3" type="box" pos="  0   -.065 0" size=".005 .03 .02"/>
+      <body name="box_pommel" pos="0 -0.085 0">
+        <geom name="box_pommel" type="sphere" size=".025"/>
+      </body>
       <site name="box" type="box" pos="0 0 0"/>
       <site name="box_end" type="box" pos="0 0 -.05"/>
     </body>
