@@ -53,14 +53,8 @@ class ManipulatorEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         # self.viewer.cam.trackbodyid = 0
 
     def reset_model(self):
-        qpos = self.np_random.uniform(low=-0.1, high=0.1, size=self.model.nq) + self.init_qpos
-        while True:
-            self.goal = self.np_random.uniform(low=-.2, high=.2, size=2)
-            if np.linalg.norm(self.goal) < 2:
-                break
-        qpos[-2:] = self.goal
-        qvel = self.init_qvel + self.np_random.uniform(low=-.005, high=.005, size=self.model.nv)
-        qvel[-2:] = 0
+        qpos = self.init_qpos
+        qvel = self.init_qvel
         self.set_state(qpos, qvel)
         self.randomize_location_circle('target_ball', radius=0.54, z=0.4)
         self.randomize_location_circle('target_ball_2', radius=0.54, z=0.4)
