@@ -39,7 +39,7 @@ class ManipulatorEnv(mujoco_env.MujocoEnv, utils.EzPickle):
                 self.num_frames_till_end -= 1
             else:
                 done = True
-        ball_pos = self.get_body_com("ball")
+        ball_pos = self.get_body_com("ball").copy()
         ball_pos[2] = 0
         ball_dist = np.linalg.norm(ball_pos)
         if ball_dist > 0.545:
