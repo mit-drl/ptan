@@ -12,7 +12,7 @@ class ManipulatorTwoArmsEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         mujoco_env.MujocoEnv.__init__(self, 'manipulator_two_arms.xml', 2)
 
     def to_goal(self):
-        print(self.get_body_com("ball"), self.get_site_com("box"))
+        # print(self.get_body_com("ball"), self.get_site_com("box"))
         return self.get_body_com("ball") - self.get_site_com("box")
 
     def step(self, a):
@@ -45,7 +45,7 @@ class ManipulatorTwoArmsEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         body_pos[2] = 0
         body_dist_1 = np.linalg.norm(body_pos)
         body_dist_2 = np.linalg.norm(body_pos-np.array([0.4, 0, 0]))
-        print(body_dist_1, body_dist_2)
+        print(body, self.get_body_com(body))
         if body_dist_1 > 0.545 and body_dist_2 > 0.545:
             print(body + " went out of bounds!")
             return True
@@ -61,7 +61,7 @@ class ManipulatorTwoArmsEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         qvel = self.init_qvel
         self.set_state(qpos, qvel)
         self.randomize_location_circle('ball', radius=0.54, z=0.4)
-        self.randomize_location_circle('box', radius=0.54, z=0.4)
+        self.randomize_location_circle('box', radius=0.54, x=0.4, y=0, z=0.4)
         return self._get_obs()
 
     def _get_obs(self):

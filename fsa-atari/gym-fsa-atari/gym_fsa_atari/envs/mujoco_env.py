@@ -148,13 +148,13 @@ class MujocoEnv(gym.Env):
         self.model.body_pos[body_id] = np.array([x_coord, y_coord, z_coord])
         print("set", body, "to", x_coord, y_coord, z_coord)
 
-    def randomize_location_circle(self, body, radius, z):
+    def randomize_location_circle(self, body, radius, x=0, y=0, z=0):
         theta = np.random.uniform(0, 2*np.pi)
         r = np.random.uniform(0.01, radius)
-        x, y = r * np.cos(theta), r * np.sin(theta)
+        x_coord, y_coord = r * np.cos(theta), r * np.sin(theta)
         body_id = self.model.body_name2id(body)
         assert (np.array_equal(self.data.get_body_xpos(body), self.data.body_xpos[body_id]))
-        self.model.body_pos[body_id] = np.array([x, y, z])
+        self.model.body_pos[body_id] = np.array([x+x_coord, y+y_coord, z])
         print("set", body, "to", x, y, z)
 
     def state_vector(self):

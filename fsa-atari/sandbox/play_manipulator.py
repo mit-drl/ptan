@@ -20,14 +20,16 @@ game = "fsa-manipulator-two-arms-v0"
 
 env = gym.make(game)
 env.reset()
-'''
-for i in range(20000):
+
+for i in range(2000):
     env.render()
     action = env.action_space.sample()
     observation, reward, done, info = env.step(action)
     print(env.get_logic_state())
+    if done:
+        break
 exit()
-'''
+
 if game == "fsa-manipulator-v0":
     keys_to_action = {
         'q': np.array([1, 0, 0, 0, 0]),
