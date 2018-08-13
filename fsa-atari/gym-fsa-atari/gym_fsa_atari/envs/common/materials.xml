@@ -15,6 +15,9 @@ for example receiving a positive reward.
     <material name="effector_default" rgba=".7 .4 .2 1"/>
     <material name="effector_highlight" rgba="0 .5 .3 1"/>
     <material name="decoration" rgba=".3 .5 .7 1"/>
+    <material name="green" rgba="0 1 0 1"/>
+    <material name="red" rgba="1 0.2 0.2 1"/>
+    <material name="blue" rgba="0 1 0.5 1"/>
     <material name="eye" rgba="0 .2 1 1"/>
     <material name="target" rgba=".6 .3 .3 1"/>
     <material name="target_default" rgba=".6 .3 .3 1"/>
