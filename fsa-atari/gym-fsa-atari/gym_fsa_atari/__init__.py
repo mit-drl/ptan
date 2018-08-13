@@ -9,6 +9,12 @@ register(
     max_episode_steps=None,
     reward_threshold=-3.75,
 )
+register(
+    id='fsa-manipulator-two-arms-v0',
+    entry_point='gym_fsa_atari.envs:ManipulatorTwoArmsEnv',
+    max_episode_steps=None,
+    reward_threshold=-3.75,
+)
 
 
 # Atari
