@@ -89,9 +89,12 @@ class ManipulatorTwoArmsEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         ball_gripped2 = 1 if ball_in_hand2 and dist_between_thumbs2 < 0.04 else 0
         box_gripped1 = 1 if box_in_hand1 and dist_between_thumbs1 < 0.04 else 0
         box_gripped2 = 1 if box_in_hand2 and dist_between_thumbs2 < 0.04 else 0
+        ball_box_dist = np.linalg.norm(self.to_goal())
+        done = 1 if ball_box_dist < 2e-2 else 0
         return (ball_in_hand1, ball_in_hand2, box_in_hand1, box_in_hand2,
-                ball_gripped1, ball_gripped2, box_gripped1, box_gripped2)
+                ball_gripped1, ball_gripped2, box_gripped1, box_gripped2,
+                done)
 
     # returns the logic's observation space
     def get_logic_observation_space(self):
-        return spaces.MultiDiscrete([2, 2, 2, 2, 2, 2, 2, 2])
+        return spaces.MultiDiscrete([2, 2, 2, 2, 2, 2, 2, 2, 2])
