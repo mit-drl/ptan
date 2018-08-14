@@ -12,8 +12,7 @@ class ManipulatorTwoArmsEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         mujoco_env.MujocoEnv.__init__(self, 'manipulator_two_arms.xml', 2)
 
     def to_goal(self):
-        # print(self.get_body_com("ball"), self.get_site_com("box"))
-        return self.get_body_com("ball") - self.get_site_com("box")
+        return self.get_site_com("ball_tip") - self.get_site_com("box")
 
     def step(self, a):
         vec = self.to_goal()

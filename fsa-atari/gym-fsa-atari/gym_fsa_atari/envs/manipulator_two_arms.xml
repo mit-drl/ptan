@@ -171,7 +171,9 @@
       <!-- vv this right here determines where the ball starts on the z axis! -->
       <joint name="ball_z" type="slide" axis="0 0 1" ref="0.012"/>
       <joint name="ball_y" type="slide" axis="0 1 0"/>
+      <geom name="blade" type="capsule" size=".01" fromto="0 -.013 0 0 -.113 0" material="green"/>
       <geom  name="ball" type="sphere" size=".022" material="green" />
+      <site name="ball_tip"   type="box" pos="0 -.113 0"/>
       <site  name="ball" type="sphere"/>
     </body>
 

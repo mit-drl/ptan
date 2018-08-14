@@ -20,8 +20,8 @@ game = "fsa-manipulator-two-arms-v0"
 
 env = gym.make(game)
 env.reset()
-
-for i in range(2000):
+'''
+for i in range(20000):
     env.render()
     action = env.action_space.sample()
     observation, reward, done, info = env.step(action)
@@ -29,7 +29,7 @@ for i in range(2000):
     if done:
         break
 exit()
-
+'''
 if game == "fsa-manipulator-v0":
     keys_to_action = {
         'q': np.array([1, 0, 0, 0, 0]),
@@ -74,7 +74,7 @@ observation, reward, done, info = env.step(do_nothing)
 while not done:
     ch = getchar()
     print(ch)
-    if ch.strip() == '' or ch not in 'abcdefghijklmnopqrstuvwxyz;':
+    if ch.strip() == '' or ch not in 'abcdefghijklmnopqrstuvwxyz;[]\'':
         print('bye!')
         break
     else:
