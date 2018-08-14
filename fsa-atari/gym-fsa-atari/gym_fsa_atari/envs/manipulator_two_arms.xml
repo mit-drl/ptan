@@ -168,8 +168,7 @@
     <!-- vv for some reason the first element of "pos" also seems to control z axis starting location -->
     <body name="ball" pos="0.2 0.1 0.4" childclass="object">
       <joint name="ball_x" type="slide" axis="1 0 0"/>
-      <!-- vv this right here determines where the ball starts on the z axis! -->
-      <joint name="ball_z" type="slide" axis="0 0 1" ref="0.012"/>
+      <joint name="ball_z" type="slide" axis="0 0 1"/>
       <joint name="ball_y" type="slide" axis="0 1 0"/>
       <geom name="blade" type="capsule" size=".01" fromto="0 -.013 0 0 -.113 0" material="green"/>
       <geom  name="ball" type="sphere" size=".022" material="green" />
@@ -193,14 +192,14 @@
     </body-->
 
     <!-- receptacles -->
-    <body name="box" pos="0.2 0 .4" euler="0 20 0" childclass="object">
+    <body name="box" pos="0.2 0 .4" childclass="object">
       <joint name="box_x" type="slide" axis="1 0 0"/>
       <joint name="box_z" type="slide" axis="0 0 1"/>
       <joint name="box_y" type="slide" axis="0 1 0"/>
-      <geom name="box_0" type="box" pos="-.035 0.01 0" size=".01 .035 .02" material="red"/>
-      <geom name="box_1" type="box" pos=" .035 0.01 0" size=".01 .035 .02" material="red"/>
-      <geom name="box_2" type="box" pos="  0  -.035 0" size=".045 .01 .02" material="red"/>
-      <geom name="box_3" type="box" pos="  0  -.065 0" size=".005 .03 .02" material="red"/>
+      <geom name="box_0" type="box" pos="-.035 0.01 0" size=".01 .035 .023" material="red"/>
+      <geom name="box_1" type="box" pos=" .035 0.01 0" size=".01 .035 .023" material="red"/>
+      <geom name="box_2" type="box" pos="  0  -.035 0" size=".045 .01 .023" material="red"/>
+      <geom name="box_3" type="box" pos="  0  -.065 0" size=".005 .03 .023" material="red"/>
       <body name="box_pommel" pos="0 -0.085 0">
         <geom name="box_pommel" type="sphere" size=".025" material="red"/>
       </body>
