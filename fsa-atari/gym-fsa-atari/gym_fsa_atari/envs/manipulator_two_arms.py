@@ -20,7 +20,7 @@ class ManipulatorTwoArmsEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         reward_ctrl = - np.square(a).sum()
         reward = reward_dist + reward_ctrl
         print("dist from goal:", reward_dist, "| current goal:", self.current_goal)
-        if reward_dist > -1e-2:
+        if reward_dist > -0.018:
             print("GOT TO GOAL")
             self.current_goal += 1
             if self.current_goal == 1 and self.num_frames_till_end == None:
