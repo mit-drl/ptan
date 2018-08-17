@@ -1,5 +1,12 @@
 from gym.envs.registration import register
 
+register(
+    id='fsa-Taxi-v2',
+    entry_point='gym_fsa_atari.envs:FsaTaxiEnv',
+    reward_threshold=8, # optimum = 8.46
+    max_episode_steps=200,
+)
+
 # Atari
 # ----------------------------------------
 

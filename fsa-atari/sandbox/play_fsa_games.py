@@ -102,6 +102,10 @@ def play(env, transpose=True, fps=30, zoom=None, callback=None, keys_to_action=N
     screen = pygame.display.set_mode(video_size)
     clock = pygame.time.Clock()
 
+    count = 0
+    old_ram = None
+    with open('ram.csv', "w") as f:
+        f.write(",".join([str(i) for i in range(0, 128)]) + '\n')
     while running:
         if env_done:
             env_done = False
@@ -116,17 +120,18 @@ def play(env, transpose=True, fps=30, zoom=None, callback=None, keys_to_action=N
             # print(info)
             if callback is not None:
                 callback(prev_obs, obs['image'], action, rew, env_done, info)
+
         if obs is not None:
             im = obs['image']
             logic = obs['logic']
             ram = env.env._get_ram()
             with open('ram.csv', "a") as f:
-                f.write(",".join(str(r) for r in ram))
+                count = count + 1
+                # if count == 0:
+                f.write(",".join(str(r) for r in ram) + '\n')
 
-            # didnt work: < 80
-            # print("{:3d} {:3d} {:3d} {:3d}".format(ram[78], ram[76], ram[83], ram[84]))
-            # 20:25 are promising. 83, 84, 87, 87 are promising; 102
-            print(ram[110:120])
+            print(ram[114])
+            # print("{0:b}".format(ram[83]))
             # print(logic)
             if len(im.shape) == 2:
                 im = im[:, :, None]

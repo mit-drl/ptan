@@ -8,6 +8,7 @@ class LogicOracle():
         self.game = game
         self.start = True
         self.last = None
+        self.old_ram = None
 
     # returns a tuple
     def get_logic_state(self, ram):
@@ -27,6 +28,18 @@ class LogicOracle():
 class LogicOracleSpaceInvaders(LogicOracle):
 
     def get_logic_state(self, ram):
+
+        alien_and_agent_laser = 0
+        alien_and_bottom_of_screen = 0
+        agent_and_alien_laser = 0
+
+        if self.old_ram is not None:
+            if ram[17] < self.old_ram[17]:
+                alien_and_agent_laser = 1
+            if ram[120] == 40:
+                alien_and_bottom_of_screen = 1
+            if ram[73] < self.old_ram[73]:
+                agent_and_alien_laser = 1
 
         real_laser, laser, saucer, dead = [0] * 4
         if ram[78] != 0:
@@ -50,6 +63,8 @@ class LogicOracleSpaceInvaders(LogicOracle):
 
         # return (real_laser, saucer, aliens, dead)
         # return (real_laser, aliens)
+
+        self.old_ram = ram
         return (aliens)
 
     def get_logic_meanings(self):

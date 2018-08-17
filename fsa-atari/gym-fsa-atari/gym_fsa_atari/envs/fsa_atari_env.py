@@ -108,10 +108,12 @@ class FsaAtariEnv(gym.Env, utils.EzPickle):
         img = self._get_image()
         ram = self._get_ram()
         logic = self.logic_oracle.get_logic_state(ram)
+
         return {'image': img, 'logic': logic}
 
     # return: (states, observations)
     def reset(self):
+        self.logic_oracle.old_ram = None
         self.ale.reset_game()
         return self._get_obs()
 

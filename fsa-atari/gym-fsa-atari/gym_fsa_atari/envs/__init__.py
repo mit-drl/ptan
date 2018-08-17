@@ -1,1 +1,2 @@
 from gym_fsa_atari.envs.fsa_atari_env import FsaAtariEnv
+from gym_fsa_atari.envs.fsa_taxi_env import FsaTaxiEnv
