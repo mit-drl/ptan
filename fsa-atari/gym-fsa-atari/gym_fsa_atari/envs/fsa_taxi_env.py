@@ -35,7 +35,7 @@ class FsaTaxiEnv(discrete.DiscreteEnv):
 
         self.locs = locs = [(0,0), (0,4), (4,0), (4,3)]
 
-        nS = 2400
+        nS = 4000
         nR = 5
         nC = 5
         maxR = nR-1
@@ -45,70 +45,75 @@ class FsaTaxiEnv(discrete.DiscreteEnv):
         P = {s : {a : [] for a in range(nA)} for s in range(nS)}
         for row in range(5):
             for col in range(5):
-                for passidx in range(6):
+                for passidx in range(5):
                     for destidx in range(4):
                         for destidx2 in range(4):
-                            state = self.encode(row, col, passidx, destidx, destidx2)
-                            # passidx == 4 implies passenger is in the car
-                            if passidx < 4 and passidx != destidx and passidx != destidx2 and destidx != destidx2:
-                                isd[state] += 1
-                            for a in range(nA):
-                                # defaults
-                                newrow, newcol, newpassidx = row, col, passidx
-                                reward = -1
-                                done = False
-                                taxiloc = (row, col)
+                            for firstdropoff in range(2):
+                                state = self.encode(row, col, passidx, destidx, destidx2, firstdropoff)
+                                # passidx == 4 implies passenger is in the car
+                                if passidx < 4 and passidx != destidx and passidx != destidx2 and destidx != destidx2 and firstdropoff < 1:
+                                    isd[state] += 1
+                                for a in range(nA):
+                                    # defaults
+                                    newrow, newcol, newpassidx, newfirstdropoff = row, col, passidx, firstdropoff
+                                    reward = -1
+                                    done = False
+                                    taxiloc = (row, col)
 
-                                if a==0:
-                                    newrow = min(row+1, maxR)
-                                elif a==1:
-                                    newrow = max(row-1, 0)
-                                if a==2 and self.desc[1+row,2*col+2]==b":":
-                                    newcol = min(col+1, maxC)
-                                elif a==3 and self.desc[1+row,2*col]==b":":
-                                    newcol = max(col-1, 0)
-                                elif a==4: # pickup
-                                    if (passidx < 4 and taxiloc == locs[passidx]):
-                                        newpassidx = 4
-                                    else:
-                                        reward = -10
-                                elif a==5: # dropoff
-                                    if (taxiloc == locs[destidx]) and passidx==4:
-                                        newpassidx = 5
-                                        reward = 20
-                                    elif (taxiloc == locs[destidx2]) and passidx==5:
-                                        done = True
-                                        reward = 20
-                                    elif (taxiloc in locs) and (passidx==4 or passidx == 5):
-                                        newpassidx = locs.index(taxiloc)
-                                    else:
-                                        reward = -10
-                                newstate = self.encode(newrow, newcol, newpassidx, destidx, destidx2)
-                                P[state][a].append((1.0, newstate, reward, done))
+                                    if a==0:
+                                        newrow = min(row+1, maxR)
+                                    elif a==1:
+                                        newrow = max(row-1, 0)
+                                    if a==2 and self.desc[1+row,2*col+2]==b":":
+                                        newcol = min(col+1, maxC)
+                                    elif a==3 and self.desc[1+row,2*col]==b":":
+                                        newcol = max(col-1, 0)
+                                    elif a==4: # pickup
+                                        if (passidx < 4 and taxiloc == locs[passidx]):
+                                            newpassidx = 4
+                                        else:
+                                            reward = -10
+                                    elif a==5: # dropoff
+                                        if (taxiloc == locs[destidx]) and passidx==4 and firstdropoff == 0:
+                                            newfirstdropoff = 1
+                                            reward = 20
+                                        elif (taxiloc == locs[destidx2]) and passidx==4 and firstdropoff == 1:
+                                            done = True
+                                            reward = 20
+                                        elif (taxiloc in locs) and passidx==4:
+                                            newpassidx = locs.index(taxiloc)
+                                        else:
+                                            reward = -10
+                                    newstate = self.encode(newrow, newcol, newpassidx, destidx, destidx2, newfirstdropoff)
+                                    P[state][a].append((1.0, newstate, reward, done))
         isd /= isd.sum()
         discrete.DiscreteEnv.__init__(self, nS, nA, P, isd)
 
-    def encode(self, taxirow, taxicol, passloc, destidx, destidx2):
-        # (5) 5, 6, 4, 4
+    def encode(self, taxirow, taxicol, passloc, destidx, destidx2, firstdropoff):
+        # (5) 5, 5, 4, 4, 2
         i = taxirow
         i *= 5
         i += taxicol
-        i *= 6
+        i *= 5
         i += passloc
         i *= 4
         i += destidx
         i *= 4
         i += destidx2
+        i *= 2
+        i += firstdropoff
         return i
 
     def decode(self, i):
         out = []
+        out.append(i % 2)
+        i = i // 2
         out.append(i % 4)
         i = i // 4
         out.append(i % 4)
         i = i // 4
-        out.append(i % 6)
-        i = i // 6
+        out.append(i % 5)
+        i = i // 5
         out.append(i % 5)
         i = i // 5
         out.append(i)
@@ -120,7 +125,7 @@ class FsaTaxiEnv(discrete.DiscreteEnv):
 
         out = self.desc.copy().tolist()
         out = [[c.decode('utf-8') for c in line] for line in out]
-        taxirow, taxicol, passidx, destidx, destidx2 = self.decode(self.s)
+        taxirow, taxicol, passidx, destidx, destidx2, firstdropoff = self.decode(self.s)
         def ul(x): return "_" if x == " " else x
         if passidx < 4:
             out[1+taxirow][2*taxicol+1] = utils.colorize(out[1+taxirow][2*taxicol+1], 'yellow', highlight=True)
