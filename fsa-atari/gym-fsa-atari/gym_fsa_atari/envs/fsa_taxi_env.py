@@ -2,7 +2,8 @@
 import sys
 from six import StringIO
 from gym import utils
-from gym.envs.toy_text import discrete
+# from gym.envs.toy_text import discrete
+from gym_fsa_atari.envs import fsadiscrete
 import numpy as np
 
 MAP = [
@@ -15,7 +16,7 @@ MAP = [
     "+---------+",
 ]
 
-class FsaTaxiEnv(discrete.DiscreteEnv):
+class FsaTaxiEnv(fsadiscrete.FsaDiscreteEnv):
     """
     The Taxi Problem
     from "Hierarchical Reinforcement Learning with the MAXQ Value Function Decomposition"
@@ -87,7 +88,7 @@ class FsaTaxiEnv(discrete.DiscreteEnv):
                                     newstate = self.encode(newrow, newcol, newpassidx, destidx, destidx2, newfirstdropoff)
                                     P[state][a].append((1.0, newstate, reward, done))
         isd /= isd.sum()
-        discrete.DiscreteEnv.__init__(self, nS, nA, P, isd)
+        fsadiscrete.FsaDiscreteEnv.__init__(self, nS, nA, P, isd)
 
     def encode(self, taxirow, taxicol, passloc, destidx, destidx2, firstdropoff):
         # (5) 5, 5, 4, 4, 2
