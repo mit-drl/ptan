@@ -28,15 +28,20 @@ class FsaTaxiEnv(fsadiscrete.FsaDiscreteEnv):
     - yellow: empty taxi
     - green: full taxi
     - other letters: locations
+
+    THE GOAL: pick up passenger at blue location, drop off at magenta location,
+    then go to the green location
     """
     metadata = {'render.modes': ['human', 'ansi']}
 
     def __init__(self):
         self.desc = np.asarray(MAP,dtype='c')
 
+        props = {"empty": 0, "dropped off": 1, "second dest": 2}
+
         self.locs = locs = [(0,0), (0,4), (4,0), (4,3)]
 
-        nS = 4000
+        nS = 6000
         nR = 5
         nC = 5
         maxR = nR-1
@@ -44,19 +49,24 @@ class FsaTaxiEnv(fsadiscrete.FsaDiscreteEnv):
         isd = np.zeros(nS)
         nA = 6
         P = {s : {a : [] for a in range(nA)} for s in range(nS)}
+        TM = {}
         for row in range(5):
             for col in range(5):
                 for passidx in range(5):
                     for destidx in range(4):
                         for destidx2 in range(4):
-                            for firstdropoff in range(2):
-                                state = self.encode(row, col, passidx, destidx, destidx2, firstdropoff)
+                            for dropoffs in range(3):
+                                state = self.encode(row, col, passidx, destidx, destidx2, dropoffs)
+                                prop = "empty"
                                 # passidx == 4 implies passenger is in the car
-                                if passidx < 4 and passidx != destidx and passidx != destidx2 and destidx != destidx2 and firstdropoff < 1:
+                                if passidx < 4 and passidx != destidx and passidx != destidx2 and destidx != destidx2 and dropoffs < 1:
                                     isd[state] += 1
+                                logic = state % (3 - 1) # the logic state; 3 is the number of logic states
+                                if logic == 1:
+                                    isd[state] = 0
                                 for a in range(nA):
                                     # defaults
-                                    newrow, newcol, newpassidx, newfirstdropoff = row, col, passidx, firstdropoff
+                                    newrow, newcol, newpassidx, newdropoffs = row, col, passidx, dropoffs
                                     reward = -1
                                     done = False
                                     taxiloc = (row, col)
@@ -73,22 +83,28 @@ class FsaTaxiEnv(fsadiscrete.FsaDiscreteEnv):
                                         if (passidx < 4 and taxiloc == locs[passidx]):
                                             newpassidx = 4
                                         else:
-                                            reward = -10
+                                            reward = -1
+                                            # reward = -10
                                     elif a==5: # dropoff
-                                        if (taxiloc == locs[destidx]) and passidx==4 and firstdropoff == 0:
-                                            newfirstdropoff = 1
-                                            reward = 20
-                                        elif (taxiloc == locs[destidx2]) and passidx==4 and firstdropoff == 1:
+                                        if (taxiloc == locs[destidx]) and passidx==4 and dropoffs == 0:
+                                            newdropoffs = 1
+                                            # reward = 20
+                                            prop = "dropped off"
+                                        elif (taxiloc == locs[destidx2]) and passidx==4 and dropoffs == 1:
                                             done = True
-                                            reward = 20
+                                            newdropoffs = 2
+                                            # reward = 20
+                                            prop = "second dest"
                                         elif (taxiloc in locs) and passidx==4:
                                             newpassidx = locs.index(taxiloc)
                                         else:
-                                            reward = -10
-                                    newstate = self.encode(newrow, newcol, newpassidx, destidx, destidx2, newfirstdropoff)
+                                            reward = -1
+                                            # reward = -10
+                                    newstate = self.encode(newrow, newcol, newpassidx, destidx, destidx2, newdropoffs)
                                     P[state][a].append((1.0, newstate, reward, done))
+                                    TM[(state, newstate)] = prop
         isd /= isd.sum()
-        fsadiscrete.FsaDiscreteEnv.__init__(self, nS, nA, P, isd)
+        fsadiscrete.FsaDiscreteEnv.__init__(self, nS, nA, P, props, TM, isd)
 
     def encode(self, taxirow, taxicol, passloc, destidx, destidx2, firstdropoff):
         # (5) 5, 5, 4, 4, 2
@@ -101,14 +117,14 @@ class FsaTaxiEnv(fsadiscrete.FsaDiscreteEnv):
         i += destidx
         i *= 4
         i += destidx2
-        i *= 2
+        i *= 3
         i += firstdropoff
         return i
 
     def decode(self, i):
         out = []
         out.append(i % 2)
-        i = i // 2
+        i = i // 3
         out.append(i % 4)
         i = i // 4
         out.append(i % 4)

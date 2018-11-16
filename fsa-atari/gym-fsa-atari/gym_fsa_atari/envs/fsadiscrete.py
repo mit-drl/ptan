@@ -20,23 +20,29 @@ class FsaDiscreteEnv(Env):
     - nS: number of states
     - nA: number of actions
     - P: transitions (*)
+    - props: dictionary mapping proposition name to number
+    - TM: dictionary mapping (state, nextstate) to set(propositions)
     - isd: initial state distribution (**)
     (*) dictionary dict of dicts of lists, where
       P[s][a] == [(probability, nextstate, reward, done), ...]
     (**) list or array of length nS
     """
-    def __init__(self, nS, nA, P, isd):
+    def __init__(self, nS, nA, P, props, TM, isd):
         self.P = P
         self.isd = isd
+        self.TM = TM
+        self.props = props
+        self.nP = len(props)
         self.lastaction = None # for rendering
         self.nS = nS
         self.nA = nA
-        self.nL = 3
+        self.nL = 3 # num logic states?
 
         self.action_space = spaces.Discrete(self.nA)
-        image_space = spaces.Discrete(self.nS / (self.nL - 1))
+        image_space = spaces.Discrete(self.nS / (self.nL ))
         logic_space = spaces.Discrete(self.nL)
-        self.observation_space = spaces.Tuple((image_space, logic_space))
+        prop_space = spaces.Discrete(self.nP)
+        self.observation_space = spaces.Tuple((image_space, logic_space, prop_space))
 
         self.seed()
         self.reset()
@@ -49,17 +55,21 @@ class FsaDiscreteEnv(Env):
         self.s = categorical_sample(self.isd, self.np_random)
         image = self.s // (self.nL - 1)
         logic = self.s % (self.nL - 1)
+        prop = set([0])
         self.lastaction = None
-        return (image, logic)
+        return (image, logic, prop)
 
     def step(self, a):
+        old_state = self.s
         transitions = self.P[self.s][a]
         i = categorical_sample([t[0] for t in transitions], self.np_random)
         p, s, r, d= transitions[i]
         self.s = s
         self.lastaction=a
 
-        image = self.s // (self.nL - 1)
-        logic = self.s % (self.nL - 1)
-        full_state = (image, logic)
+        image = self.s // (self.nL )
+        logic = self.s % (self.nL )
+        prop = self.props[self.TM[(old_state, self.s)]]
+
+        full_state = (image, logic, prop)
         return (full_state, r, d, {"prob" : p})
